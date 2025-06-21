@@ -1,0 +1,144 @@
+diff --git a/LICENSE b/LICENSE
+index 5b5c9be..06c0384 100644
+--- a/LICENSE
++++ b/LICENSE
+@@ -13,8 +13,6 @@ See the License for the specific language governing permissions and
+ limitations under the License.
+ 
+ 
+-
+-
+ tools/projects used:
+ --------------------
+ AFL++
+diff --git a/build_and_run_afl_docker b/build_and_run_afl_docker
+index ff2a5eb..b595880 100755
+--- a/build_and_run_afl_docker
++++ b/build_and_run_afl_docker
+@@ -1,5 +1,15 @@
+ #!/bin/bash
+ 
++cat <<'EOF'
++---------------------------------------------------------------------------
++____|                                    \                                 
++|    |   | _  / _  /   _ \   __|        _ \    __ `__ \    _ \    __|  _ \ 
++__|  |   |   /    /    __/  |          ___ \   |   |   |  (   |  |     __/ 
++_|   \__,_| ___| ___| \___| _|        _/    _\ _|  _|  _| \___/  _|   \___| 
++---------------------------------------------------------------------------
++>> AFL++ docker
++EOF
++
+ source "./lldb_docker/env/logger.sh"
+ source "./config.cfg"
+ 
+diff --git a/build_and_run_lldb_docker b/build_and_run_lldb_docker
+index 587c37a..a694148 100755
+--- a/build_and_run_lldb_docker
++++ b/build_and_run_lldb_docker
+@@ -1,5 +1,15 @@
+ 
+ 
++cat <<'EOF'
++---------------------------------------------------------------------------
++____|                                    \                                 
++|    |   | _  / _  /   _ \   __|        _ \    __ `__ \    _ \    __|  _ \ 
++__|  |   |   /    /    __/  |          ___ \   |   |   |  (   |  |     __/ 
++_|   \__,_| ___| ___| \___| _|        _/    _\ _|  _|  _| \___/  _|   \___| 
++---------------------------------------------------------------------------
++>> LLDB docker
++EOF
++
+ # This script should setup the usbmuxd socket forwarding
+ source ./lldb_docker/env/logger.sh
+ source ./host_setups.sh
+diff --git a/harness/harness.xcodeproj/project.pbxproj b/harness/harness.xcodeproj/project.pbxproj
+index 9507b71..4ddf495 100644
+--- a/harness/harness.xcodeproj/project.pbxproj
++++ b/harness/harness.xcodeproj/project.pbxproj
+@@ -144,7 +144,7 @@
+ 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+ 				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = 1;
+-				DEVELOPMENT_TEAM = 28362P99WU;
++				DEVELOPMENT_TEAM = "";
+ 				GENERATE_INFOPLIST_FILE = YES;
+ 				INFOPLIST_FILE = harness/Info.plist;
+ 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+@@ -158,7 +158,7 @@
+ 					"@executable_path/Frameworks",
+ 				);
+ 				MARKETING_VERSION = 1.0;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.fuzzerAmor.harness;
++				PRODUCT_BUNDLE_IDENTIFIER = com.fuzzerAmor.harnessTest;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+@@ -172,7 +172,7 @@
+ 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+ 				CODE_SIGN_STYLE = Automatic;
+ 				CURRENT_PROJECT_VERSION = 1;
+-				DEVELOPMENT_TEAM = 28362P99WU;
++				DEVELOPMENT_TEAM = "";
+ 				GENERATE_INFOPLIST_FILE = YES;
+ 				INFOPLIST_FILE = harness/Info.plist;
+ 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+@@ -186,7 +186,7 @@
+ 					"@executable_path/Frameworks",
+ 				);
+ 				MARKETING_VERSION = 1.0;
+-				PRODUCT_BUNDLE_IDENTIFIER = com.fuzzerAmor.harness;
++				PRODUCT_BUNDLE_IDENTIFIER = com.fuzzerAmor.harnessTest;
+ 				PRODUCT_NAME = "$(TARGET_NAME)";
+ 				SWIFT_EMIT_LOC_STRINGS = YES;
+ 				TARGETED_DEVICE_FAMILY = "1,2";
+diff --git a/lldb_docker/env/scripts/FAMainHelper.py b/lldb_docker/env/scripts/FAMainHelper.py
+index fb82258..93e1017 100644
+--- a/lldb_docker/env/scripts/FAMainHelper.py
++++ b/lldb_docker/env/scripts/FAMainHelper.py
+@@ -6,7 +6,7 @@ from FAWriter import *
+ from FATypes import *
+ 
+ """ ----- Configure the fuzzed function adress and length ------"""
+-"""
++
+ def getFuzzedFunctionAddress():
+     return getAddressOfSymbol("fuzzMeExample", "harness")
+ 
+@@ -16,15 +16,16 @@ def getFuzzedFunctionLength():
+ 
+ 
+ def getTrampolineAddress():
+-    # If the adress is less than 128mb away from playground
++    # If the adress is less than 128mb away from playground return None
+     return None
+ 
+ def getTempRegister():
++    # If the adress is less than 128mb away from playground return None
+     return None
+-"""
+ 
+-""" ----  Example of a system library ------"""
+ 
++""" ----  Example of a system library ------"""
++"""
+ #If you uncomment this part, you need to comment the one above it
+ def getFuzzedFunctionAddress():
+     return getAddressOfSymbol("-[NSPlaceholderString initWithBytes:length:encoding:]", "Foundation", verbose=False)
+@@ -34,14 +35,14 @@ def getFuzzedFunctionLength():
+     return 48
+ 
+ def getTrampolineAddress():
++    #return an address that can we can overwrite for trampoline purposes. See docs. This is needed if distance between fuzzed target and playground is above 128Mb
+     return getAddressByModuleAndOffset(0x048124, "Foundation", verbose=False)
+-    #return getAddressByModuleAndOffset(0x2C26A0, "Foundation", verbose=False)
+ 
+ def getTempRegister():
+-    """ return a string of a register which is safe to use as a tmp storage of trampoline branching"""
++    #return a string of a register which is safe to use as a tmp storage of trampoline branching
+     return "x17"
+ 
+-
++"""
+ 
+ """  generic function for fetching addresses """
+ def getVCAddress():

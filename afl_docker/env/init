@@ -1,0 +1,41 @@
+#!/bin/bash
+
+source "/env/logger.sh"
+
+log INFO "docker initialization script started"
+
+log INFO "importing main configuration"
+source /env/config.cfg
+
+cd /home/
+
+log INFO "Compiling c harness proxy and target process"
+./compile
+
+
+log INFO "creating i/o dirs"
+## Create dirs for fuzzer
+mkdir outputs
+mkdir inputs
+
+log INFO "creating random corpus"
+
+## fill with corpus
+# example A
+#cp -R /env/examples/A inputs 
+
+# example B
+cp -R /env/examples/B inputs
+
+
+## Allow socket to be created
+sleep 1
+
+log INFO "The container port is $HARNESS_CONTAINER_PORT"
+log INFO "Starting to fuzz"
+SERVER_PORT=$HARNESS_CONTAINER_PORT afl-fuzz -i inputs/ -o outputs/ -t 5000 -- ./afl-proxy
+
+# if you encounter problems with AFL not starting to Fuzz:
+#AFL_DEBUG=1 AFL_NO_UI=1 SERVER_PORT=$HARNESS_CONTAINER_PORT afl-fuzz -i inputs/ -o outputs/ -t 5000 -- ./afl-proxy
+
+

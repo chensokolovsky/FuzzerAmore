@@ -1,0 +1,30 @@
+
+
+cat <<'EOF'
+---------------------------------------------------------------------------
+____|                                    \                                 
+|    |   | _  / _  /   _ \   __|        _ \    __ `__ \    _ \    __|  _ \ 
+__|  |   |   /    /    __/  |          ___ \   |   |   |  (   |  |     __/ 
+_|   \__,_| ___| ___| \___| _|        _/    _\ _|  _|  _| \___/  _|   \___| 
+---------------------------------------------------------------------------
+>> LLDB docker
+EOF
+
+# This script should setup the usbmuxd socket forwarding
+source ./lldb_docker/env/logger.sh
+source ./host_setups.sh
+log INFO "tunnel info: $tunnel_info"
+
+
+log INFO "building the lldb docker"
+docker build -f ./lldb_docker/Dockerfile -t fuzzeramore:fuzzeramorelldb .
+
+log INFO "running the lldb docker"
+
+docker run  -i \
+-e TUNNEL_INFO="$tunnel_info" \
+--network=host \
+-v /Users/chenshalev/Library/Developer/:/root/Library/Developer/ \
+-v /Applications/Xcode.app/:/Applications/Xcode.app/ \
+-t fuzzeramore:fuzzeramorelldb \
+bash -c "./init && bash"

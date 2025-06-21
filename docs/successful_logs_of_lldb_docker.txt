@@ -1,0 +1,120 @@
+/Users/chenshalev/workspace/iosMain/FuzzerAmore % ./build_and_run_lldb_docker
+-e [2025-06-13 14:14:29] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] got mux pid: 84139
+2025/06/13 14:14:29 socat[84139] W exiting on signal 15
+-e [2025-06-13 14:14:29] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] starting mux from port to unix socket
+-e [2025-06-13 14:14:29] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] Sorry need your password to start the tunnel, must be sudo.
+-e [2025-06-13 14:14:29] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] If you don't feel safe you can open host_setups.sh file and see that that is my only sudo usage
+Password:
+-e [2025-06-13 14:14:33] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] output file: /var/folders/dy/4qsv1f2x2_v441822j5k6h4w0000gn/T/tmp.mrXFFKVfFt
+-e [2025-06-13 14:14:33] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] got tunnel pid: 84166
+-e [2025-06-13 14:14:33] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] waiting
+-e [2025-06-13 14:14:33] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] waiting
+-e [2025-06-13 14:14:34] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] waiting
+-e [2025-06-13 14:14:34] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] INFO:     Started server process [85286]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:49151 (Press CTRL+C to quit)
+2025-06-13 14:14:33 chenshalevs-MBP.lan pymobiledevice3.tunneld.server[85286] INFO [start-tunnel-task-usbmux-00008030-000514D42223402E-USB] Created tunnel --rsd fd49:c343:c26d::1 52082
+-e [2025-06-13 14:14:34] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] tunnel-info: --rsd fd49:c343:c26d::1 52082
+-e [2025-06-13 14:14:34] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] tunnel info: --rsd fd49:c343:c26d::1 52082
+-e [2025-06-13 14:14:34] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] building the lldb docker
+[+] Building 2.0s (27/27) FINISHED                                                                                                         docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                       0.0s
+ => => transferring dockerfile: 934B                                                                                                                       0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:22.04                                                                                            1.2s
+ => [internal] load .dockerignore                                                                                                                          0.0s
+ => => transferring context: 2B                                                                                                                            0.0s
+ => [ 1/22] FROM docker.io/library/ubuntu:22.04@sha256:01a3ee0b5e413cefaaffc6abe68c9c37879ae3cced56a8e088b1649e5b269eee                                    0.0s
+ => => resolve docker.io/library/ubuntu:22.04@sha256:01a3ee0b5e413cefaaffc6abe68c9c37879ae3cced56a8e088b1649e5b269eee                                      0.0s
+ => [internal] load build context                                                                                                                          0.1s
+ => => transferring context: 15.22MB                                                                                                                       0.1s
+ => CACHED [ 2/22] RUN apt-get clean                                                                                                                       0.0s
+ => CACHED [ 3/22] RUN apt-get update -y                                                                                                                   0.0s
+ => CACHED [ 4/22] RUN apt-get upgrade -y                                                                                                                  0.0s
+ => CACHED [ 5/22] RUN apt-get install -y curl                                                                                                             0.0s
+ => CACHED [ 6/22] RUN apt-get install -y lldb                                                                                                             0.0s
+ => CACHED [ 7/22] RUN apt-get install -y python3-lldb-14                                                                                                  0.0s
+ => CACHED [ 8/22] RUN ln -s /usr/lib/llvm-14/lib/python3.10/dist-packages/lldb/* /usr/lib/python3/dist-packages/lldb/                                     0.0s
+ => CACHED [ 9/22] RUN apt-get install -y libusbmuxd-tools                                                                                                 0.0s
+ => CACHED [10/22] RUN apt-get install -y python3-pip                                                                                                      0.0s
+ => CACHED [11/22] RUN pip install frida-tools==13.0.4                                                                                                     0.0s
+ => CACHED [12/22] RUN apt-get install -y cmake make gcc g++ libglib2.0-dev                                                                                0.0s
+ => CACHED [13/22] RUN apt-get install -y openssh-client                                                                                                   0.0s
+ => CACHED [14/22] RUN apt-get install -y socat                                                                                                            0.0s
+ => CACHED [15/22] RUN pip install keystone-engine                                                                                                         0.0s
+ => CACHED [16/22] RUN pip install capstone==5.0.6                                                                                                         0.0s
+ => CACHED [17/22] RUN pip install pymobiledevice3                                                                                                         0.0s
+ => CACHED [18/22] WORKDIR /env                                                                                                                            0.0s
+ => CACHED [19/22] COPY ./config.cfg /env/                                                                                                                 0.0s
+ => [20/22] COPY ./lldb_docker/env /env/                                                                                                                   0.0s
+ => [21/22] RUN chmod +x /env/init                                                                                                                         0.1s
+ => [22/22] RUN chmod +x /env/scripts/generate_lldbinit                                                                                                    0.1s
+ => exporting to image                                                                                                                                     0.4s
+ => => exporting layers                                                                                                                                    0.3s
+ => => exporting manifest sha256:e04ebbd6b960492d9ca937d1f5b6da72c85fb4ce80646234f9f6f51821b2ce73                                                          0.0s
+ => => exporting config sha256:4ade120b320089d16e6c28a9a71ade28a52d91c48e933b202ca8ed1a15888ceb                                                            0.0s
+ => => exporting attestation manifest sha256:1ff6a41825c7c65321c8416e6434f6ef79e0b500d875e0dc78691cd4f4174958                                              0.0s
+ => => exporting manifest list sha256:f8deb57ca8909be129d2cb241741de357f79065bf56443c427237db84befafc4                                                     0.0s
+ => => naming to docker.io/library/fuzzeramore:fuzzeramorelldb                                                                                             0.0s
+ => => unpacking to docker.io/library/fuzzeramore:fuzzeramorelldb                                                                                          0.1s
+
+What's next:
+    View a summary of image vulnerabilities and recommendations → docker scout quickview
+-e [2025-06-13 14:14:36] [FuzzerAmore] [build_and_run_lldb_docker] [INFO] running the lldb docker
+[2025-06-13 11:14:36] [FuzzerAmore] [init] [INFO] docker initialization script started
+[2025-06-13 11:14:36] [FuzzerAmore] [init] [INFO] importing main config file
+[2025-06-13 11:14:36] [FuzzerAmore] [init] [INFO] PID is: 7042
+[2025-06-13 11:14:36] [FuzzerAmore] [init] [INFO] The tunnel info is: --rsd fd49:c343:c26d::1 52082
+[2025-06-13 11:14:37] [FuzzerAmore] [init] [INFO] will use lldb connection: connect://[fd49:c343:c26d::1]:50429
+[2025-06-13 11:14:37] [FuzzerAmore] [init] [INFO] Setting up patched lldb
+ln: failed to create symbolic link '/usr/bin/lldb': File exists
+[2025-06-13 11:14:37] [FuzzerAmore] [init] [INFO] calling generate_lldbinit script
+[2025-06-13 11:14:37] [FuzzerAmore] [generate_lldbinit] [INFO] generate lldb script started
+[2025-06-13 11:14:37] [FuzzerAmore] [generate_lldbinit] [INFO] reading args...
+[2025-06-13 11:14:37] [FuzzerAmore] [generate_lldbinit] [INFO] generating lldbinit
+[2025-06-13 11:14:37] [FuzzerAmore] [generate_lldbinit] [INFO] generate lldbinit done
+[2025-06-13 11:14:38] [FuzzerAmore] [init] [INFO] starting lldb client
+(lldb) command source -s 0 './scripts/custom_lldbinit'
+Executing commands in '/env/scripts/custom_lldbinit'.
+(lldb) command script import /env/scripts/lldb_py_init.py
+lldb py init started
+will run lldb command: platform select remote-ios
+  Platform: remote-ios
+ Connected: no
+  SDK Path: "/root/Library/Developer/Xcode/iOS DeviceSupport/iPad7,12 17.4.1 (21E237)"
+ SDK Roots: [ 0] "/root/Library/Developer/Xcode/iOS DeviceSupport/iPad7,12 17.4.1 (21E237)"
+ SDK Roots: [ 1] "/root/Library/Developer/Xcode/iOS DeviceSupport/iPhone10,3 14.5.1 (18E212)"
+ SDK Roots: [ 2] "/root/Library/Developer/Xcode/iOS DeviceSupport/iPhone12,8 17.7.1 (21H216)"
+Connected to remote platform.
+Process 7042 stopped
+* thread #1, queue = 'com.apple.main-thread', stop reason = signal SIGSTOP
+    frame #0: 0x00000001d95696c8 libsystem_kernel.dylib`mach_msg2_trap + 8
+libsystem_kernel.dylib`mach_msg2_trap:
+->  0x1d95696c8 <+8>: ret
+
+libsystem_kernel.dylib`macx_swapon:
+    0x1d95696cc <+0>: mov    x16, #-0x30
+    0x1d95696d0 <+4>: svc    #0x80
+    0x1d95696d4 <+8>: ret
+Executable module set to "/private/var/containers/Bundle/Application/1BD72963-1AB6-4A0E-A9EE-11E62963DA7F/harness.app/harness".
+lldb init called
+playground addresss is 0x10477576c
+fuzzed function address is 0x1047749e0
+example report call function is 0x104775728
+VC address: 0x105b0a1d0
+ends_of_basic_blocks:
+[Instruction(address=4369893892, mnemonic='tbnz', operands='w8, #0x0, 0x104774a14'), Instruction(address=4369893920, mnemonic='tbnz', operands='w8, #0x0, 0x104774a30'), Instruction(address=4369893952, mnemonic='tbnz', operands='w8, #0x0, 0x104774aa8'), Instruction(address=4369893976, mnemonic='tbnz', operands='w8, #0x0, 0x104774aa4'), Instruction(address=4369894000, mnemonic='tbnz', operands='w8, #0x0, 0x104774aa0'), Instruction(address=4369894024, mnemonic='tbnz', operands='w8, #0x0, 0x104774a9c'), Instruction(address=4369894072, mnemonic='tbnz', operands='w8, #0x0, 0x104774b20'), Instruction(address=4369894096, mnemonic='tbnz', operands='w8, #0x0, 0x104774b1c'), Instruction(address=4369894120, mnemonic='tbnz', operands='w8, #0x0, 0x104774b18'), Instruction(address=4369894144, mnemonic='tbnz', operands='w8, #0x0, 0x104774b14'), Instruction(address=4369894192, mnemonic='tbnz', operands='w8, #0x0, 0x104774bd0'), Instruction(address=4369894216, mnemonic='tbnz', operands='w8, #0x0, 0x104774bcc'), Instruction(address=4369894240, mnemonic='tbnz', operands='w8, #0x0, 0x104774bc8'), Instruction(address=4369894264, mnemonic='tbnz', operands='w8, #0x0, 0x104774bc4'), Instruction(address=4369894288, mnemonic='tbnz', operands='w8, #0x0, 0x104774bc0'), Instruction(address=4369894312, mnemonic='tbnz', operands='w8, #0x0, 0x104774bbc'), Instruction(address=4369894612, mnemonic='tbnz', operands='w8, #0x0, 0x104774e90'), Instruction(address=4369894700, mnemonic='tbnz', operands='w8, #0x0, 0x104774d58'), Instruction(address=4369894896, mnemonic='tbnz', operands='w8, #0x0, 0x104774e0c'), Instruction(address=4369895148, mnemonic='tbnz', operands='w8, #0x0, 0x104775064'), Instruction(address=4369895224, mnemonic='tbnz', operands='w8, #0x0, 0x104774f4c'), Instruction(address=4369895464, mnemonic='tbnz', operands='w8, #0x0, 0x104774f14'), Instruction(address=4369895516, mnemonic='tbnz', operands='w8, #0x0, 0x104774f14')]
+writing 23 hooks. Please wait...
+1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|
+Wrote 23 instrumentation hooks. Looks good
+***************************************************************
+**  Now its time to continue the process, detaching, quitting the debugger, and running AFL
+**  In the lldb console do the following:
+**  (lldb) c
+**  (lldb) proc deta
+**  (lldb) q
+**  you can also exit the lldb container:
+**  /env# exit
+**  Then in the host terminal:
+**  $ ./build_and_run_afl_docker
+***********  DONE. Follow the instructions above ^ *************

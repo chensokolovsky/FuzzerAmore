@@ -1,0 +1,61 @@
+
+source "/env/logger.sh"
+
+log INFO "docker initialization script started"
+
+# Get the conf file
+log INFO "importing main config file"
+source "./config.cfg"
+
+## ------ Setting up local unix socket to mux tcp of host
+log INFO "app name is: $APP_NAME"
+
+socat UNIX-LISTEN:/var/run/usbmuxd,fork TCP:host.docker.internal:$MUX_PORT &
+
+PID=$(pymobiledevice3 processes ps | grep -B1 $APP_NAME | sed -n 's/.*"\([0-9]\+\)".*/\1/p')
+log INFO "PID is: $PID"
+if [ -z "$PID" ]; then
+  log ERROR "Error: PID not found for app '$APP_NAME'"
+  log ERROR "Is the iOS harness running?"
+  log ERROR "Does the app name match the app you are trying to connect to?"
+  log ERROR "Was a connection established propely? (look for error messages in the logs so far)"
+  exit 1
+fi
+
+## ----- The host created the tunnel. start debugserver
+log INFO "The tunnel info is: $TUNNEL_INFO"
+
+if [ -z "$TUNNEL_INFO" ]; then
+  log ERROR "Tunnel info is missing. I can't proceed before this is fixed"
+  exit 1
+fi
+
+output=$(pymobiledevice3 developer debugserver start-server $TUNNEL_INFO)
+connect_url=$(echo "$output" | grep -o 'connect://\[[^]]\+\]:[0-9]\+')
+
+
+if [ -z "$connect_url" ]; then
+  log ERROR "connect_url is missing. will not be able to connect lldb client to the server"
+  exit 1
+fi
+
+log INFO "will use lldb connection: $connect_url"
+
+
+
+## ----- LLDB -------
+
+# Copy the patched lldb
+log INFO "Setting up patched lldb"
+mv /env/liblldb-14.so.1_patched /usr/lib/aarch64-linux-gnu/liblldb-14.so.1
+ln -s /usr/bin/lldb-14 /usr/bin/lldb
+
+log INFO "calling generate_lldbinit script"
+./scripts/generate_lldbinit ./scripts/custom_lldbinit $connect_url $PID /env/scripts/FuzzerAmore.py
+
+
+sleep 0.5
+
+# run lldb client
+log INFO "starting lldb client"
+lldb --source-before-file ./scripts/custom_lldbinit

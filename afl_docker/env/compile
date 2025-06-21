@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# compiling the proxy harness
+make
+
+# compiling the target process
+# gcc ./afl-proxy.c -o ../a.out
+

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+
+# This script generates a tailored lldb init script according to the different configurations
+# The main configuration (congif.cfg) contains the communication ports that should be used from the docker lldb client
+# The specific app configuration contains the script name to import that fits the application/executable in hand
+
+
+# pseudo:
+# crete the lldb file
+# import needed scripts
+# select platform
+# connect to lldb server according to the provided port
+
+# Usage:
+# $ ./generate_lldbinit path port app_script
+
+
+### ------------ "parse" arguments ----------
+source "/env/logger.sh"
+
+log INFO "generate lldb script started"
+log INFO "reading args..."
+lldbinit_path=$1
+connection_port=$2
+pid=$3
+lldb_script=$4
+
+
+### --- since connect is asynched here, need to do the init using python
+
+# save config as python:
+lldb_py_conf="/env/scripts/lldb_py_conf.py"
+echo "connect_info = '$connection_port'" >> $lldb_py_conf
+echo "pid = '$pid'" >> $lldb_py_conf
+echo "main_script = '$lldb_script'" >> $lldb_py_conf
+
+
+### -------- This part creates a new lldbinit file with the configured information received as parameters
+log INFO "generating lldbinit" 
+# session init
+
+echo "command script import /env/scripts/lldb_py_init.py" >> $lldbinit_path
+
+log INFO "generate lldbinit done"
+
+

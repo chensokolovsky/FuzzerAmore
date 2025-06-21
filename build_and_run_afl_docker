@@ -1,0 +1,53 @@
+#!/bin/bash
+
+cat <<'EOF'
+---------------------------------------------------------------------------
+____|                                    \                                 
+|    |   | _  / _  /   _ \   __|        _ \    __ `__ \    _ \    __|  _ \ 
+__|  |   |   /    /    __/  |          ___ \   |   |   |  (   |  |     __/ 
+_|   \__,_| ___| ___| \___| _|        _/    _\ _|  _|  _| \___/  _|   \___| 
+---------------------------------------------------------------------------
+>> AFL++ docker
+EOF
+
+source "./lldb_docker/env/logger.sh"
+source "./config.cfg"
+
+log INFO "farwarding the afl container to the iproxy on the host"
+log INFO "killing previous socat for port $HARNESS_CONTAINER_PORT"
+harness_forward_pid=$(netstat -vanp tcp | grep "$HARNESS_CONTAINER_PORT" | awk "/\\.$P/ {print \$11}")
+log INFO "got previous container port forwarding pid: $harness_forward_pid"
+[ -n "$harness_forward_pid" ] && kill "$harness_forward_pid"
+
+harness_iproxy_pid=$(netstat -vanp tcp | grep "$HARNESS_DEVICE_PORT" | awk "/\\.$P/ {print \$11}")
+log INFO "got previous device mapping pid: $harness_iproxy_pid"
+[ -n "$harness_iproxy_pid" ] && kill "$harness_iproxy_pid"
+
+log INFO "Running command: TCP-LISTEN:$HARNESS_CONTAINER_PORT,fork TCP:localhost:$HARNESS_DEVICE_PORT &"
+# forward from the afl container to the iproxy port
+socat TCP-LISTEN:$HARNESS_CONTAINER_PORT,fork TCP:localhost:$HARNESS_DEVICE_PORT &
+
+# iproxy from the host to the device. This is the port that the harness is listenin to
+# afl will connect from 
+log INFO "Starting iproxy $HARNESS_DEVICE_PORT $HARNESS_DEVICE_PORT" 
+iproxy $HARNESS_DEVICE_PORT $HARNESS_DEVICE_PORT &
+
+INIT_SCRIPT="init"
+
+sleep 1
+
+log INFO "Building AFL docker..."
+docker build \
+-f ./afl_docker/Dockerfile \
+-t fuzzeramore:fuzzeramoreafl .
+
+sleep 1
+
+log INFO "Running AFL docker..."
+docker run  -i \
+--network=host \
+-P \
+-v /Users/chenshalev/Library/Developer/:/root/Library/Developer/ \
+-v /Applications/Xcode.app/:/Applications/Xcode.app/ \
+-t fuzzeramore:fuzzeramoreafl \
+bash -c "/home/$INIT_SCRIPT && bash"

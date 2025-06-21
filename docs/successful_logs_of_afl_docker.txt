@@ -1,0 +1,155 @@
+(lldb) c
+Process 7098 resuming
+(lldb) proc detach
+Process 7098 detached
+(lldb) q
+root@docker-desktop:/env# exit
+exit
+/Users/chenshalev/workspace/iosMain/FuzzerAmore % ./build_and_run_afl_docker
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] farwarding the afl container to the iproxy on the host
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] killing previous socat for port 59092
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] got previous container port forwarding pid: 2093
+2025/06/13 16:40:10 socat[2093] W exiting on signal 15
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] got previous device mapping pid: 2098
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] Running command: TCP-LISTEN:59092,fork TCP:localhost:59091 &
+[2025-06-13 16:40:10] [FuzzerAmore] [build_and_run_afl_docker] [INFO] Starting iproxy 59091 59091
+Creating listening port 59091 for device port 59091
+waiting for connection
+[2025-06-13 16:40:11] [FuzzerAmore] [build_and_run_afl_docker] [INFO] Building AFL docker...
+[+] Building 1.1s (12/12) FINISHED                                                                                                                                docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                                              0.0s
+ => => transferring dockerfile: 358B                                                                                                                                              0.0s
+ => [internal] load metadata for docker.io/aflplusplus/aflplusplus:latest                                                                                                         0.7s
+ => [internal] load .dockerignore                                                                                                                                                 0.0s
+ => => transferring context: 2B                                                                                                                                                   0.0s
+ => CACHED [1/7] FROM docker.io/aflplusplus/aflplusplus:latest@sha256:23edea458bcc1e5647b19bfba205f21408235972ce6b346c326dbeef179919d6                                            0.0s
+ => => resolve docker.io/aflplusplus/aflplusplus:latest@sha256:23edea458bcc1e5647b19bfba205f21408235972ce6b346c326dbeef179919d6                                                   0.0s
+ => [internal] load build context                                                                                                                                                 0.0s
+ => => transferring context: 13.00kB                                                                                                                                              0.0s
+ => [2/7] COPY ./afl_docker/env/* /home                                                                                                                                           0.0s
+ => [3/7] COPY ./config.cfg /env/                                                                                                                                                 0.0s
+ => [4/7] COPY ./lldb_docker/env/logger.sh /env/                                                                                                                                  0.0s
+ => [5/7] RUN chmod +x /home/init                                                                                                                                                 0.1s
+ => [6/7] RUN chmod +x /home/compile                                                                                                                                              0.1s
+ => [7/7] WORKDIR /home/                                                                                                                                                          0.0s
+ => exporting to image                                                                                                                                                            0.1s
+ => => exporting layers                                                                                                                                                           0.1s
+ => => exporting manifest sha256:50f220ae9bceda1034b6b1e9535ed46c5843fe1935e8e3cb71b75d4a66ee1066                                                                                 0.0s
+ => => exporting config sha256:fc50e28deeddd49af0e07b155caeaa168d288ffef007582c3ce4553030117954                                                                                   0.0s
+ => => exporting attestation manifest sha256:cbe2974f839548fe9ab17b489e8ba9c2c748c549b236d348d5508e9a41cdc4ff                                                                     0.0s
+ => => exporting manifest list sha256:0c91b89f8f54ff012133082a2b9b997e816f0c3a18233865a5c7cdee3ecb98ce                                                                            0.0s
+ => => naming to docker.io/library/fuzzeramore:fuzzeramoreafl                                                                                                                     0.0s
+ => => unpacking to docker.io/library/fuzzeramore:fuzzeramoreafl                                                                                                                  0.0s
+
+What's next:
+    View a summary of image vulnerabilities and recommendations → docker scout quickview
+[2025-06-13 16:40:13] [FuzzerAmore] [build_and_run_afl_docker] [INFO] Running AFL docker...
+[2025-06-13 13:40:13] [FuzzerAmore] [init] [INFO] docker initialization script started
+[2025-06-13 13:40:13] [FuzzerAmore] [init] [INFO] importing main configuration
+[2025-06-13 13:40:13] [FuzzerAmore] [init] [INFO] Compiling c harness proxy and target process
+cc -I/AFLplusplus/ -I./include -o afl-proxy afl-proxy.c
+[2025-06-13 13:40:13] [FuzzerAmore] [init] [INFO] creating i/o dirs
+[2025-06-13 13:40:13] [FuzzerAmore] [init] [INFO] creating random corpus
+[2025-06-13 13:40:14] [FuzzerAmore] [init] [INFO] The container port is 59092
+[2025-06-13 13:40:14] [FuzzerAmore] [init] [INFO] Starting to fuzz
+[+] Enabled environment variable AFL_SKIP_CPUFREQ with value 1
+[+] Enabled environment variable AFL_I_DONT_CARE_ABOUT_MISSING_CRASHES with value 1
+[+] Enabled environment variable AFL_TRY_AFFINITY with value 1
+afl-fuzz++4.33a based on afl by Michal Zalewski and a large online community
+[+] AFL++ is maintained by Marc "van Hauser" Heuse, Dominik Maier, Andrea Fioraldi and Heiko "hexcoder" Eißfeldt
+[+] AFL++ is open source, get it at https://github.com/AFLplusplus/AFLplusplus
+[+] NOTE: AFL++ >= v3 has changed defaults and behaviours - see README.md
+[+] No -M/-S set, autoconfiguring for "-S default"
+[*] Getting to work...
+[+] Using exploration-based constant power schedule (EXPLORE)
+[+] Enabled testcache with 50 MB
+[+] Generating fuzz data with a length of min=1 max=1048576
+[*] Checking core_pattern...
+[+] You have 12 CPU cores and 4 runnable tasks (utilization: 33%).
+[+] Try parallel jobs - see /usr/local/share/doc/afl/fuzzing_in_depth.md#c-using-multiple-cores
+[*] Setting up output directories...
+[*] Checking CPU core loadout...
+[+] Found a free CPU core, try binding to #11.
+[*] Validating target binary...
+[*] Scanning 'inputs/'...
+[*] Creating hard links for all input files...
+[+] Loaded a total of 4 seeds.
+[*] Spinning up the fork server...
+[!] WARNING: Old fork server model is used by the target, this still works though.
+[+] All right - old fork server is up.
+[*] Target map size: 65535
+[*] No auto-generated dictionary tokens to reuse.
+[*] Attempting dry run with 'id:000000,time:0,execs:0,orig:input1.bin'...
+New connection for 59091->59091, fd = 5
+                                       waiting for connection
+                                                             Requesting connection to USB device handle 9 (serial: 00008030-000514D42223402E), port 59091
+                                                                                                                                                             len = 16, map size = 2, exec speed = 3319 us, hash = 37a561dcd17e5c52
+[*] Attempting dry run with 'id:000001,time:0,execs:0,orig:input2.bin'...
+    len = 5, map size = 5, exec speed = 2600 us, hash = cafe732e0d8847ee
+[*] Attempting dry run with 'id:000002,time:0,execs:0,orig:input3.bin'...
+    len = 5, map size = 5, exec speed = 2555 us, hash = cafe732e0d8847ee
+[!] WARNING: No new instrumentation output, test case may be useless.
+[*] Attempting dry run with 'id:000003,time:0,execs:0,orig:input4.bin'...
+    len = 5, map size = 5, exec speed = 2550 us, hash = cafe732e0d8847ee
+[!] WARNING: No new instrumentation output, test case may be useless.
+[+] All test cases processed.
+[!] WARNING: Some test cases look useless. Consider using a smaller set.
+[+] Here are some useful stats:
+
+    Test case count : 2 favored, 0 variable, 2 ignored, 4 total
+       Bitmap range : 2 to 5 bits (average: 4.25 bits)
+        Exec timing : 2600 to 3319 us (average: 2756 us)
+
+[*] -t option specified. We'll use an exec timeout of 5000 ms.
+[+] All set and ready to roll!
+
+         american fuzzy lop ++4.33a {default} (./afl-proxy) [explore]
+┌─ process timing ────────────────────────────────────┬─ overall results ────┐
+│        run time : 0 days, 0 hrs, 0 min, 7 sec       │  cycles done : 2     │
+│   last new find : 0 days, 0 hrs, 0 min, 2 sec       │ corpus count : 7     │
+│last saved crash : none seen yet                     │saved crashes : 0     │
+│ last saved hang : none seen yet                     │  saved hangs : 0     │
+├─ cycle progress ─────────────────────┬─ map coverage┴──────────────────────┤
+│  now processing : 6.2 (85.7%)        │    map density : 0.01% / 0.02%      │
+│  runs timed out : 0 (0.00%)          │ count coverage : 1.00 bits/tuple    │
+├─ stage progress ─────────────────────┼─ findings in depth ─────────────────┤
+│  now trying : havoc                  │ favored items : 5 (71.43%)          │
+│ stage execs : 107/200 (53.50%)       │  new edges on : 5 (71.43%)          │
+│ total execs : 2495                   │ total crashes : 0 (0 saved)         │
+│  exec speed : 312.5/sec              │  total tmouts : 0 (0 saved)         │
+├─ fuzzing strategy yields ────────────┴─────────────┬─ item geometry ───────┤
+│   bit flips : 0/0, 0/0, 0/0                        │    levels : 3         │
+│  byte flips : 0/0, 0/0, 0/0                        │   pending : 0         │
+│ arithmetics : 0/0, 0/0, 0/0                        │  pend fav : 0         │
+│  known ints : 0/0, 0/0, 0/0                        │ own finds : 3         │
+│  dictionary : 0/0, 0/0, 0/0, 0/0                   │  imported : 0         │
+│havoc/splice : 3/2300, 0/0                          │ stability : 100.00%   │
+│py/custom/rq : unused, unused, unused, unused       ├───────────────────────┘
+│    trim/eff : 10.81%/7, n/a                        │          [cpu011: 16%]
+└─ strategy: explore ────────── state: started :-) ──┘^C
+
+
+
+// If you had crashes:
+
+
+^C
+
++++ Testing aborted by user +++
+[*] Writing outputs//default/fastresume.bin ...
+[+] fastresume.bin successfully written with 320369 bytes.
+[+] We're done here. Have a nice day!
+
+[AFL++ docker-desktop] /home # cd outputs/default/crashes/
+[AFL++ docker-desktop] /home/outputs/default/crashes # ls -la
+total 24
+drwx------ 2 root root 4096 Jun 14 12:03 .
+drwx------ 6 root root 4096 Jun 14 12:03 ..
+-rw------- 1 root root  547 Jun 14 12:03 README.txt
+-rw------- 1 root root    9 Jun 14 12:03 id:000000,sig:15,src:000008,time:51529,execs:15946,op:havoc,rep:1
+-rw------- 1 root root    6 Jun 14 12:03 id:000001,sig:15,src:000008,time:53533,execs:16266,op:havoc,rep:3
+-rw------- 1 root root    9 Jun 14 12:03 id:000002,sig:15,src:000008,time:55681,execs:16939,op:havoc,rep:3
+[AFL++ docker-desktop] /home/outputs/default/crashes # cat id\:000002\,sig\:15\,src\:000008\,time\:55681\,execs\:16939\,op\:havoc\,rep\:3
+FUZZxxT[AFL++ docker-desktop] /home/outputs/default/crashes #
+
+
